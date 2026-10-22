@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -13,6 +14,7 @@ const acceptRetryDelay = 100 * time.Millisecond
 
 type Server struct {
 	listener    net.Listener
+	registry    *Registry
 	commands    map[string]command
 	commandHint string
 }
@@ -23,7 +25,7 @@ func NewServer(address string) (*Server, error) {
 		return nil, err
 	}
 
-	s := &Server{listener: listener}
+	s := &Server{listener: listener, registry: NewRegistry()}
 	s.registerCommands()
 	return s, nil
 }
@@ -56,6 +58,13 @@ func (s *Server) handleConn(conn net.Conn) {
 		log.Printf(sendFailedFormat, client.addr, err)
 		return
 	}
+
+	s.registry.Add(client)
+	defer func() {
+		s.registry.Remove(client)
+		s.registry.Broadcast(fmt.Sprintf(leftFormat, client.addr), nil)
+	}()
+	s.registry.Broadcast(fmt.Sprintf(joinedFormat, client.addr), client)
 
 	reader := bufio.NewReader(conn)
 	for {

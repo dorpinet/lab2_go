@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
 	"unicode"
@@ -21,6 +22,8 @@ func (s *Server) registerCommands() {
 		{name: cmdTime, handler: s.handleTime},
 		{name: cmdClose, handler: s.handleClose},
 		{name: cmdQuit, handler: s.handleClose},
+		{name: cmdBroadcast, needsText: true, handler: s.handleBroadcast},
+		{name: cmdMsg, needsText: true, handler: s.handleBroadcast},
 	}
 
 	s.commands = make(map[string]command, len(table))
@@ -67,4 +70,10 @@ func (s *Server) handleTime(c *Client, _ string) bool {
 func (s *Server) handleClose(c *Client, _ string) bool {
 	_ = c.Send(farewellMsg)
 	return false
+}
+
+func (s *Server) handleBroadcast(c *Client, args string) bool {
+	delivered := s.registry.Broadcast(fmt.Sprintf(broadcastFormat, c.addr, args), c)
+	log.Printf(broadcastLogFormat, c.addr, args, delivered)
+	return true
 }

@@ -1,10 +1,12 @@
 package main
 
 const (
-	cmdEcho  = "ECHO"
-	cmdTime  = "TIME"
-	cmdClose = "CLOSE"
-	cmdQuit  = "QUIT"
+	cmdEcho      = "ECHO"
+	cmdTime      = "TIME"
+	cmdClose     = "CLOSE"
+	cmdQuit      = "QUIT"
+	cmdBroadcast = "BROADCAST"
+	cmdMsg       = "MSG"
 )
 
 const (
@@ -14,6 +16,9 @@ const (
 	timeFormat        = "[TIME]: %s"
 	unknownFormat     = "[ERROR] unknown command %q, available commands: %s"
 	missingTextFormat = "[ERROR] %s needs some text after it"
+	broadcastFormat   = "[MESSAGE from %s]: %s"
+	joinedFormat      = "[SYSTEM] new client hopped in: %s"
+	leftFormat        = "[SYSTEM] client dipped: %s"
 )
 
 const (
@@ -24,4 +29,5 @@ const (
 	connectedFormat    = "[CONNECTION] new client connected: %s"
 	disconnectedFormat = "[CONNECTION] client left: %s"
 	sendFailedFormat   = "[SERVER] failed to write to %s: %v"
+	broadcastLogFormat = "[BROADCAST] from %s -> %q (delivered to %d)"
 )
