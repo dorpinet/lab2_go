@@ -60,7 +60,7 @@ telnet localhost 9000
  
 Сервер із детектором гонитви, без `DATA RACE`:
  
-![Рівень 2: race detector](docs/Screenshot%202026-10-22%20214515.png)
+![Рівень 2: race detector](screenshots/Screenshot%202026-10-22%20214515.png)
  
 ## Технології
  
